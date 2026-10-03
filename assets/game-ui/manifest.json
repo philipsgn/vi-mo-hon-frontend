@@ -1,0 +1,312 @@
+{
+  "version": "1.0.0",
+  "style": "Retro VN 1990s & Casual Game Floating Islands",
+  "groups": {
+    "backgrounds": [
+      {
+        "name": "bg_distant_islands",
+        "webp": "bg_distant_islands.webp",
+        "png": "bg_distant_islands.png",
+        "size_webp_kb": 209.68,
+        "size_png_kb": 1006.49
+      },
+      {
+        "name": "bg_sky_gradient",
+        "webp": "bg_sky_gradient.webp",
+        "png": "bg_sky_gradient.png",
+        "size_webp_kb": 16.12,
+        "size_png_kb": 833.4
+      },
+      {
+        "name": "island_expense_base",
+        "webp": "island_expense_base.webp",
+        "png": "island_expense_base.png",
+        "size_webp_kb": 22.27,
+        "size_png_kb": 167.71
+      },
+      {
+        "name": "island_main_waterfall",
+        "webp": "island_main_waterfall.webp",
+        "png": "island_main_waterfall.png",
+        "size_webp_kb": 21.5,
+        "size_png_kb": 158.86
+      }
+    ],
+    "panels": [
+      {
+        "name": "navbar_game_dock",
+        "webp": "navbar_game_dock.webp",
+        "png": "navbar_game_dock.png",
+        "size_webp_kb": 6.2,
+        "size_png_kb": 50.93
+      },
+      {
+        "name": "panel_card_cyan_mission",
+        "webp": "panel_card_cyan_mission.webp",
+        "png": "panel_card_cyan_mission.png",
+        "size_webp_kb": 7.7,
+        "size_png_kb": 53.82
+      },
+      {
+        "name": "panel_card_purple_wallet",
+        "webp": "panel_card_purple_wallet.webp",
+        "png": "panel_card_purple_wallet.png",
+        "size_webp_kb": 7.46,
+        "size_png_kb": 50.14
+      },
+      {
+        "name": "panel_parchment_blank",
+        "webp": "panel_parchment_blank.webp",
+        "png": "panel_parchment_blank.png",
+        "size_webp_kb": 16.04,
+        "size_png_kb": 115.98
+      },
+      {
+        "name": "panel_wood_ancient",
+        "webp": "panel_wood_ancient.webp",
+        "png": "panel_wood_ancient.png",
+        "size_webp_kb": 25.69,
+        "size_png_kb": 295.12
+      },
+      {
+        "name": "tag_ribbon_chapter_red",
+        "webp": "tag_ribbon_chapter_red.webp",
+        "png": "tag_ribbon_chapter_red.png",
+        "size_webp_kb": 1.86,
+        "size_png_kb": 9.34
+      }
+    ],
+    "buttons": [
+      {
+        "name": "btn_cyan_disabled",
+        "webp": "btn_cyan_disabled.webp",
+        "png": "btn_cyan_disabled.png",
+        "size_webp_kb": 3.94,
+        "size_png_kb": 20.51
+      },
+      {
+        "name": "btn_cyan_normal",
+        "webp": "btn_cyan_normal.webp",
+        "png": "btn_cyan_normal.png",
+        "size_webp_kb": 4.79,
+        "size_png_kb": 33.2
+      },
+      {
+        "name": "btn_cyan_pressed",
+        "webp": "btn_cyan_pressed.webp",
+        "png": "btn_cyan_pressed.png",
+        "size_webp_kb": 4.53,
+        "size_png_kb": 32.73
+      },
+      {
+        "name": "btn_gold_disabled",
+        "webp": "btn_gold_disabled.webp",
+        "png": "btn_gold_disabled.png",
+        "size_webp_kb": 2.57,
+        "size_png_kb": 18.52
+      },
+      {
+        "name": "btn_gold_normal",
+        "webp": "btn_gold_normal.webp",
+        "png": "btn_gold_normal.png",
+        "size_webp_kb": 3.33,
+        "size_png_kb": 31.87
+      },
+      {
+        "name": "btn_gold_pressed",
+        "webp": "btn_gold_pressed.webp",
+        "png": "btn_gold_pressed.png",
+        "size_webp_kb": 3.1,
+        "size_png_kb": 31.35
+      },
+      {
+        "name": "btn_green_disabled",
+        "webp": "btn_green_disabled.webp",
+        "png": "btn_green_disabled.png",
+        "size_webp_kb": 3.58,
+        "size_png_kb": 20.59
+      },
+      {
+        "name": "btn_green_normal",
+        "webp": "btn_green_normal.webp",
+        "png": "btn_green_normal.png",
+        "size_webp_kb": 4.2,
+        "size_png_kb": 33.35
+      },
+      {
+        "name": "btn_green_pressed",
+        "webp": "btn_green_pressed.webp",
+        "png": "btn_green_pressed.png",
+        "size_webp_kb": 3.94,
+        "size_png_kb": 32.96
+      },
+      {
+        "name": "btn_side_bag",
+        "webp": "btn_side_bag.webp",
+        "png": "btn_side_bag.png",
+        "size_webp_kb": 0.8,
+        "size_png_kb": 4.17
+      },
+      {
+        "name": "btn_side_bxh",
+        "webp": "btn_side_bxh.webp",
+        "png": "btn_side_bxh.png",
+        "size_webp_kb": 0.84,
+        "size_png_kb": 3.95
+      },
+      {
+        "name": "btn_side_friends",
+        "webp": "btn_side_friends.webp",
+        "png": "btn_side_friends.png",
+        "size_webp_kb": 0.78,
+        "size_png_kb": 3.96
+      },
+      {
+        "name": "btn_side_gift",
+        "webp": "btn_side_gift.webp",
+        "png": "btn_side_gift.png",
+        "size_webp_kb": 0.91,
+        "size_png_kb": 4.23
+      },
+      {
+        "name": "btn_side_quest",
+        "webp": "btn_side_quest.webp",
+        "png": "btn_side_quest.png",
+        "size_webp_kb": 0.81,
+        "size_png_kb": 3.87
+      },
+      {
+        "name": "btn_side_shop",
+        "webp": "btn_side_shop.webp",
+        "png": "btn_side_shop.png",
+        "size_webp_kb": 0.76,
+        "size_png_kb": 4.07
+      }
+    ],
+    "bars": [
+      {
+        "name": "bar_fill_purple",
+        "webp": "bar_fill_purple.webp",
+        "png": "bar_fill_purple.png",
+        "size_webp_kb": 1.62,
+        "size_png_kb": 11.42
+      },
+      {
+        "name": "bar_fill_red",
+        "webp": "bar_fill_red.webp",
+        "png": "bar_fill_red.png",
+        "size_webp_kb": 1.81,
+        "size_png_kb": 14.3
+      },
+      {
+        "name": "capsule_metric_blue",
+        "webp": "capsule_metric_blue.webp",
+        "png": "capsule_metric_blue.png",
+        "size_webp_kb": 1.91,
+        "size_png_kb": 11.42
+      },
+      {
+        "name": "hp_bar_empty_frame",
+        "webp": "hp_bar_empty_frame.webp",
+        "png": "hp_bar_empty_frame.png",
+        "size_webp_kb": 6.52,
+        "size_png_kb": 47.37
+      },
+      {
+        "name": "hp_bar_full",
+        "webp": "hp_bar_full.webp",
+        "png": "hp_bar_full.png",
+        "size_webp_kb": 5.12,
+        "size_png_kb": 58.55
+      }
+    ],
+    "icons": [
+      {
+        "name": "icon_coin_bronze",
+        "webp": "icon_coin_bronze.webp",
+        "png": "icon_coin_bronze.png",
+        "size_webp_kb": 4.84,
+        "size_png_kb": 31.25
+      },
+      {
+        "name": "icon_fire_streak",
+        "webp": "icon_fire_streak.webp",
+        "png": "icon_fire_streak.png",
+        "size_webp_kb": 5.25,
+        "size_png_kb": 34.03
+      },
+      {
+        "name": "icon_gift_box",
+        "webp": "icon_gift_box.webp",
+        "png": "icon_gift_box.png",
+        "size_webp_kb": 5.48,
+        "size_png_kb": 34.42
+      },
+      {
+        "name": "icon_shield_discipline",
+        "webp": "icon_shield_discipline.webp",
+        "png": "icon_shield_discipline.png",
+        "size_webp_kb": 6.74,
+        "size_png_kb": 31.05
+      },
+      {
+        "name": "icon_star_xp",
+        "webp": "icon_star_xp.webp",
+        "png": "icon_star_xp.png",
+        "size_webp_kb": 4.39,
+        "size_png_kb": 28.47
+      },
+      {
+        "name": "icon_sword_battle",
+        "webp": "icon_sword_battle.webp",
+        "png": "icon_sword_battle.png",
+        "size_webp_kb": 4.57,
+        "size_png_kb": 26.9
+      }
+    ],
+    "mascot": [
+      {
+        "name": "boss_tra_sua_idle",
+        "webp": "boss_tra_sua_idle.webp",
+        "png": "boss_tra_sua_idle.png",
+        "size_webp_kb": 4.19,
+        "size_png_kb": 26.45
+      },
+      {
+        "name": "boss_tra_sua_monster",
+        "webp": "boss_tra_sua_monster.webp",
+        "png": "boss_tra_sua_monster.png",
+        "size_webp_kb": 3.47,
+        "size_png_kb": 21.55
+      },
+      {
+        "name": "shiba_happy",
+        "webp": "shiba_happy.webp",
+        "png": "shiba_happy.png",
+        "size_webp_kb": 12.17,
+        "size_png_kb": 84.29
+      },
+      {
+        "name": "shiba_proud",
+        "webp": "shiba_proud.webp",
+        "png": "shiba_proud.png",
+        "size_webp_kb": 12.21,
+        "size_png_kb": 83.86
+      },
+      {
+        "name": "shiba_sarcastic_roast",
+        "webp": "shiba_sarcastic_roast.webp",
+        "png": "shiba_sarcastic_roast.png",
+        "size_webp_kb": 12.75,
+        "size_png_kb": 85.41
+      }
+    ]
+  },
+  "metrics": {
+    "total_assets": 41,
+    "total_webp_kb": 466.44,
+    "total_png_kb": 3651.86,
+    "budget_limit_kb": 2500,
+    "budget_status": "EXCELLENT (Under 2.5MB budget)"
+  }
+}

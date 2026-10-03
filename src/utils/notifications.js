@@ -1,18 +1,17 @@
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  NOTIFICATION_TYPES,
+  NOTIFICATION_CHANNELS,
+  NOTIFICATION_SCHEDULES,
+  DEFAULT_NOTIFICATION_SETTINGS,
+  parseNotificationSettings,
+} from './notificationConfig.cjs';
 
-const DAILY_REMINDER_TYPE = 'daily-expense-reminder';
-const TEST_REMINDER_TYPE = 'test-expense-reminder';
-const REMINDER_CHANNEL_ID = 'daily-expense-reminders';
+const SETTINGS_STORAGE_KEY = 'vmh_notification_settings_v1';
 
-const DAILY_REMINDER_CONTENT = {
-  title: 'Ví Mỏ Hỗn nhắc nhẹ',
-  body: 'Ghi nhanh khoản chi hôm nay trước khi não bạn xoá lịch sử nha.',
-  data: {
-    reminderType: DAILY_REMINDER_TYPE,
-  },
-};
-
+// Setup foreground notification handler
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowBanner: true,
@@ -22,46 +21,34 @@ Notifications.setNotificationHandler({
   }),
 });
 
-async function ensureAndroidNotificationChannel() {
+async function ensureAndroidNotificationChannels() {
   if (Platform.OS !== 'android') {
     return;
   }
 
-  await Notifications.setNotificationChannelAsync(REMINDER_CHANNEL_ID, {
-    name: 'Nhắc nhở hằng ngày',
-    importance: Notifications.AndroidImportance.DEFAULT,
+  // 1. Daily expense reminder channel
+  await Notifications.setNotificationChannelAsync(NOTIFICATION_CHANNELS.DAILY, {
+    name: 'Nhắc nhở ghi chi tiêu hằng ngày',
+    importance: Notifications.AndroidImportance.HIGH,
     vibrationPattern: [0, 250, 250, 250],
-    lightColor: '#9cd763',
+    lightColor: '#FFE600',
+  });
+
+  // 2. Financial discipline warning channel (Night sale FOMO)
+  await Notifications.setNotificationChannelAsync(NOTIFICATION_CHANNELS.WARNINGS, {
+    name: 'Cảnh báo kỷ luật & bão sale đêm',
+    importance: Notifications.AndroidImportance.MAX,
+    vibrationPattern: [0, 350, 150, 350],
+    lightColor: '#FF5C5C',
   });
 }
 
-function isDailyReminder(request) {
-  return request?.content?.data?.reminderType === DAILY_REMINDER_TYPE;
-}
-
-function getReminderTimeFromRequest(request) {
-  const data = request?.content?.data ?? {};
-  const trigger = request?.trigger ?? {};
-  const hour = Number(data.hour ?? trigger.hour);
-  const minute = Number(data.minute ?? trigger.minute);
-
-  if (!Number.isFinite(hour) || !Number.isFinite(minute)) {
-    return null;
-  }
-
-  return { hour, minute };
-}
-
-export function formatReminderTime({ hour, minute } = {}) {
-  if (!Number.isFinite(hour) || !Number.isFinite(minute)) {
-    return '20:30';
-  }
-
-  return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-}
-
 export async function requestNotificationPermission() {
-  await ensureAndroidNotificationChannel();
+  if (Platform.OS === 'web') {
+    return { granted: true, status: 'granted' };
+  }
+
+  await ensureAndroidNotificationChannels();
 
   const currentPermissions = await Notifications.getPermissionsAsync();
   const finalPermissions = currentPermissions.granted
@@ -74,63 +61,153 @@ export async function requestNotificationPermission() {
   };
 }
 
-export async function scheduleDailyExpenseReminder({ hour = 20, minute = 30 } = {}) {
-  await ensureAndroidNotificationChannel();
-  await cancelDailyExpenseReminder();
+export async function getNotificationSettings() {
+  try {
+    const raw = await AsyncStorage.getItem(SETTINGS_STORAGE_KEY);
+    return parseNotificationSettings(raw);
+  } catch {
+    return { ...DEFAULT_NOTIFICATION_SETTINGS };
+  }
+}
+
+export async function saveNotificationSettings(settings) {
+  const safe = {
+    dailyExpense: Boolean(settings?.dailyExpense),
+    nightSaleWarning: Boolean(settings?.nightSaleWarning),
+  };
+  try {
+    await AsyncStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(safe));
+  } catch (err) {
+    console.warn('[Notifications] Failed to persist settings:', err);
+  }
+  return safe;
+}
+
+export async function cancelNotificationByType(reminderType) {
+  if (Platform.OS === 'web') return;
+
+  try {
+    const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+    const targets = scheduled.filter(
+      (item) => item?.content?.data?.reminderType === reminderType
+    );
+
+    await Promise.all(
+      targets.map((item) => Notifications.cancelScheduledNotificationAsync(item.identifier))
+    );
+  } catch (err) {
+    console.warn('[Notifications] Cancel failed for type:', reminderType, err);
+  }
+}
+
+export async function scheduleDailyExpenseReminder(customTime) {
+  if (Platform.OS === 'web') return null;
+
+  await ensureAndroidNotificationChannels();
+  await cancelNotificationByType(NOTIFICATION_TYPES.DAILY_EXPENSE);
+
+  const conf = NOTIFICATION_SCHEDULES.dailyExpense;
+  const hour = customTime?.hour ?? conf.hour;
+  const minute = customTime?.minute ?? conf.minute;
 
   return Notifications.scheduleNotificationAsync({
     content: {
-      ...DAILY_REMINDER_CONTENT,
+      title: conf.title,
+      body: conf.body,
       data: {
-        ...DAILY_REMINDER_CONTENT.data,
+        reminderType: conf.type,
         hour,
         minute,
       },
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.DAILY,
-      channelId: REMINDER_CHANNEL_ID,
+      channelId: conf.channelId,
       hour,
       minute,
     },
   });
 }
 
-export async function scheduleTestExpenseReminder() {
-  await ensureAndroidNotificationChannel();
+export async function scheduleNightSaleWarning(customTime) {
+  if (Platform.OS === 'web') return null;
+
+  await ensureAndroidNotificationChannels();
+  await cancelNotificationByType(NOTIFICATION_TYPES.NIGHT_SALE_WARNING);
+
+  const conf = NOTIFICATION_SCHEDULES.nightSaleWarning;
+  const hour = customTime?.hour ?? conf.hour;
+  const minute = customTime?.minute ?? conf.minute;
 
   return Notifications.scheduleNotificationAsync({
     content: {
-      title: 'Test nhắc nhở',
-      body: 'Nếu bạn thấy thông báo này, notification đã chạy.',
+      title: conf.title,
+      body: conf.body,
       data: {
-        reminderType: TEST_REMINDER_TYPE,
+        reminderType: conf.type,
+        hour,
+        minute,
+      },
+    },
+    trigger: {
+      type: Notifications.SchedulableTriggerInputTypes.DAILY,
+      channelId: conf.channelId,
+      hour,
+      minute,
+    },
+  });
+}
+
+export async function scheduleTestReminder(type = 'daily') {
+  if (Platform.OS === 'web') {
+    return 'web-simulated-notification';
+  }
+
+  await ensureAndroidNotificationChannels();
+  const isSale = type === 'sale';
+  const conf = isSale
+    ? NOTIFICATION_SCHEDULES.nightSaleWarning
+    : NOTIFICATION_SCHEDULES.dailyExpense;
+
+  return Notifications.scheduleNotificationAsync({
+    content: {
+      title: `[TEST 5S] ${conf.title}`,
+      body: conf.body,
+      data: {
+        reminderType: NOTIFICATION_TYPES.TEST_REMINDER,
+        originalType: conf.type,
       },
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-      channelId: REMINDER_CHANNEL_ID,
+      channelId: conf.channelId,
       seconds: 5,
     },
   });
 }
 
-export async function cancelDailyExpenseReminder() {
-  const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
-  const dailyReminders = scheduledNotifications.filter(isDailyReminder);
+export async function syncAllDisciplineNotifications(settings) {
+  const currentSettings = settings || (await getNotificationSettings());
 
-  await Promise.all(
-    dailyReminders.map((reminder) =>
-      Notifications.cancelScheduledNotificationAsync(reminder.identifier)
-    )
-  );
+  // 1. Daily expense reminder (20:00)
+  if (currentSettings.dailyExpense) {
+    await scheduleDailyExpenseReminder();
+  } else {
+    await cancelNotificationByType(NOTIFICATION_TYPES.DAILY_EXPENSE);
+  }
+
+  // 2. Night sale warning (22:45)
+  if (currentSettings.nightSaleWarning) {
+    await scheduleNightSaleWarning();
+  } else {
+    await cancelNotificationByType(NOTIFICATION_TYPES.NIGHT_SALE_WARNING);
+  }
+
+  return currentSettings;
 }
 
-export async function getScheduledReminders() {
-  const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
-
-  return scheduledNotifications.filter(isDailyReminder).map((request) => ({
-    id: request.identifier,
-    time: getReminderTimeFromRequest(request),
-  }));
-}
+export {
+  NOTIFICATION_TYPES,
+  NOTIFICATION_SCHEDULES,
+  DEFAULT_NOTIFICATION_SETTINGS,
+};

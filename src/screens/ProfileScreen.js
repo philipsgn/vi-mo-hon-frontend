@@ -67,7 +67,7 @@ function MiniBadge({ icon, label, earned }) {
   );
 }
 
-export function ProfileScreen({ dashboard, profile: savedProfile, userId, onRefreshDashboard }) {
+export function ProfileScreen({ dashboard, profile: savedProfile, userId, onRefreshDashboard, onLogout }) {
   const dashboardData = dashboard?.data ?? dashboard ?? {};
   const dashboardProfile = dashboardData?.profile;
   const recentExpenses = Array.isArray(dashboardData.recentExpenses) ? dashboardData.recentExpenses : [];
@@ -267,6 +267,17 @@ export function ProfileScreen({ dashboard, profile: savedProfile, userId, onRefr
         ]}
       >
         <Text style={styles.primaryButtonText}>Chỉnh sửa hồ sơ</Text>
+      </Pressable>
+
+      <Pressable
+        onPress={() => onLogout?.()}
+        style={({ pressed }) => [
+          styles.logoutButton,
+          pressed && styles.buttonPressed,
+        ]}
+      >
+        <Ionicons name="log-out-outline" size={18} color="#E11D48" style={{ marginRight: 6 }} />
+        <Text style={styles.logoutButtonText}>Đăng xuất khỏi tài khoản</Text>
       </Pressable>
 
       {successMessage ? (
@@ -487,5 +498,21 @@ const styles = StyleSheet.create({
   },
   miniBadgeTextLocked: {
     color: colors.onSurfaceVariant,
+  },
+  logoutButton: {
+    alignItems: 'center',
+    backgroundColor: '#FFF1F2',
+    borderColor: '#FECDD3',
+    borderRadius: 14,
+    borderWidth: 1.5,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+  },
+  logoutButtonText: {
+    color: '#E11D48',
+    fontSize: 15,
+    fontWeight: '800',
   },
 });

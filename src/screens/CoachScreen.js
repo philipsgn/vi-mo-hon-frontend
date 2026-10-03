@@ -13,11 +13,18 @@ import {
   View,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Audio } from 'expo-av';
 import * as Speech from 'expo-speech';
 import { apiPost, apiPostFormData } from '../api/client';
 import { colors } from '../theme/colors';
 import { safeTextInputStyles } from '../theme/inputStyles';
+
+// Safe lazy load: Expo Go SDK 57 removed the ExponentAV native module from client
+let Audio = null;
+try {
+  Audio = require('expo-av').Audio;
+} catch (e) {
+  // Gracefully fallback when ExponentAV native module is absent in Expo Go
+}
 
 const mascotImage = require('../../design-reference/mascot.png');
 
@@ -173,6 +180,11 @@ export function CoachScreen({ userId }) {
       return;
     }
 
+    if (!Audio) {
+      setError('Tính năng ghi âm giọng nói yêu cầu Custom Development Build trên iOS (Expo Go SDK 57 đã lược bỏ module ExponentAV).');
+      return;
+    }
+
     setError('');
     setTranscribedText('');
 
@@ -254,7 +266,7 @@ export function CoachScreen({ userId }) {
       );
     } finally {
       setIsVoiceLoading(false);
-      Audio.setAudioModeAsync({ allowsRecordingIOS: false }).catch(() => {});
+      Audio?.setAudioModeAsync?.({ allowsRecordingIOS: false })?.catch(() => {});
     }
   };
 

@@ -1,12 +1,22 @@
+import Constants from 'expo-constants';
+import { resolveApiBaseUrl } from '../utils/apiBaseUrl.cjs';
+
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
-const REQUEST_TIMEOUT_MS = 10000;
+const RESOLVED_API_BASE_URL = resolveApiBaseUrl({
+  configuredUrl: API_BASE_URL,
+  hostUri: Constants.expoConfig?.hostUri,
+  isDevelopment: typeof __DEV__ !== 'undefined' && __DEV__,
+});
+const REQUEST_TIMEOUT_MS = 25000;
 
 function buildUrl(path) {
-  if (!API_BASE_URL) {
-    throw new Error('Missing EXPO_PUBLIC_API_BASE_URL in .env');
+  if (!RESOLVED_API_BASE_URL) {
+    throw new Error(
+      'No API endpoint available. Run Expo in LAN mode or set EXPO_PUBLIC_API_BASE_URL.',
+    );
   }
 
-  const cleanBaseUrl = API_BASE_URL.replace(/\/+$/, '');
+  const cleanBaseUrl = RESOLVED_API_BASE_URL.replace(/\/+$/, '');
   let cleanPath = path.startsWith('/') ? path : `/${path}`;
 
   if (cleanBaseUrl.endsWith('/api') && cleanPath.startsWith('/api/')) {
@@ -61,8 +71,14 @@ async function apiRequest(path, options = {}) {
       throw error;
     }
 
-    if (error?.name === 'AbortError') {
-      throw new Error('Kết nối đến máy chủ quá lâu. Vui lòng thử lại.');
+    const errMsg = String(error?.message || '');
+    if (
+      error?.name === 'AbortError' ||
+      errMsg.includes('FetchRequestCanceledException') ||
+      errMsg.includes('canceled') ||
+      errMsg.includes('Network request failed')
+    ) {
+      throw new Error('Kết nối máy chủ bị gián đoạn hoặc quá thời gian. Đang dùng dữ liệu ngoại tuyến.');
     }
 
     if (error instanceof SyntaxError) {
